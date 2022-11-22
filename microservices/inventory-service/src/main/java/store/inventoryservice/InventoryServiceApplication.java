@@ -1,6 +1,6 @@
 package store.inventoryservice;
 
-import store.inventoryservice.model.*;
+import store.inventoryservice.model.Inventory;
 import store.inventoryservice.repository.InventoryRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

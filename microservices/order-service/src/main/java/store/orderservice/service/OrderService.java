@@ -2,13 +2,19 @@ package store.orderservice.service;
 
 import brave.Span;
 import brave.Tracer;
+import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.messaging.support.MessageBuilder;
 import store.orderservice.dto.InventoryResponse;
+import store.orderservice.dto.OrderDto;
 import store.orderservice.dto.OrderLineItemsDto;
 import store.orderservice.dto.OrderRequest;
+import store.orderservice.event.OrderPlacedEvent;
 import store.orderservice.model.Order;
 import store.orderservice.model.OrderLineItems;
 import store.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,6 +31,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
     private final brave.Tracer tracer;
+    private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
     public String placeOrder(OrderRequest orderRequest) {
         Order order = new Order();
@@ -61,8 +68,9 @@ public class OrderService {
             boolean allProductsInStock = Arrays.stream(inventoryResponsArray)
                     .allMatch(InventoryResponse::isInStock);
 
-            if(allProductsInStock){
+            if (allProductsInStock) {
                 orderRepository.save(order);
+                kafkaTemplate.send("notificationTopic", new OrderPlacedEvent(order.getOrderNumber()));
                 return "Order Placed Successfully";
             } else {
                 throw new IllegalArgumentException("Product is not in stock, please try again later");
