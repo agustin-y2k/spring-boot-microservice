@@ -24,5 +24,4 @@ public class InventoryService {
                                 .build()
                 ).toList();
     }
-
 }
