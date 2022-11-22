@@ -8,12 +8,14 @@ import store.orderservice.model.Order;
 import store.orderservice.model.OrderLineItems;
 import store.orderservice.repository.OrderRepository;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
