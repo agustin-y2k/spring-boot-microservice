@@ -1,9 +1,12 @@
 package store.inventoryservice.controller;
 
+import store.inventoryservice.dto.InventoryResponse;
 import store.inventoryservice.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/inventory")
@@ -12,16 +15,10 @@ public class InventoryController {
 
     private final InventoryService inventoryService;
 
-    @GetMapping("/{sku-code}")
+    // http://localhost:8083/api/inventory?skuCode=SKU-1&skuCode=SKU-2
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public boolean isInStock(@PathVariable("sku-code") String skuCode) {
+    public List<InventoryResponse> isInStock(@RequestParam List<String> skuCode) {
         return inventoryService.isInStock(skuCode);
     }
-
-    @PutMapping("/{sku-code}/{quantity}")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateInventoryPut(@PathVariable("sku-code") String skuCode, @PathVariable("quantity") Integer quantity) {
-        inventoryService.updateInventory(skuCode, quantity);
-    }
-
 }
