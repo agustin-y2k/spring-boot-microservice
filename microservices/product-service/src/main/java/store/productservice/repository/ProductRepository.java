@@ -7,5 +7,4 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     Product findByName(String name);
     Product findByCategory(String category);
     Product deleteByName(String name);
-
 }
