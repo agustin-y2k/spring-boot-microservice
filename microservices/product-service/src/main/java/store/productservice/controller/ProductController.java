@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import store.productservice.dto.ProductRequest;
 import store.productservice.dto.ProductResponse;
-import store.productservice.sercive.ProductService;
+import store.productservice.service.ProductService;
 
 import java.util.List;
 
